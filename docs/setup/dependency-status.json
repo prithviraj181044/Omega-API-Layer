@@ -1,0 +1,43 @@
+{
+  "springBoot": "4.1.2",
+  "springCloud": "2025.1.4",
+  "maven": "3.9.16",
+  "wrapper": "3.3.4",
+  "source": "Maven Central official artifact metadata",
+  "securityApproval": "PENDING: metadata/version existence is not CVSS or licence approval",
+  "jacoco": "0.8.16",
+  "pmd": "3.28.0",
+  "checkstyle": "3.6.0",
+  "archunit": "1.5.1",
+  "spotbugs": "4.10.5.0",
+  "java": {
+    "vendor": "Eclipse Adoptium",
+    "major": 25
+  },
+  "database": {
+    "product": "MongoDB",
+    "confirmedBy": "Prithvi",
+    "date": "2026-10-30",
+    "imageVersion": null
+  },
+  "omegaErrorsLibraryAvailable": true,
+  "fullG1": false,
+  "errorLibrary": {
+    "coordinates": "gr.eurobank.omega:omega-errors-lib:0.1.0-SNAPSHOT",
+    "delivery": "reactor-local",
+    "package": "com.eurobank.omega.error.contract",
+    "activeCodes": 24,
+    "wordingAndGreekHumanReview": "PENDING",
+    "externallyPublished": false
+  },
+  "javaQuality": {
+    "delivery": "project-owned standard parent baseline",
+    "checkstyle": "Google Java Style",
+    "checkstyleRuntime": "14.3.0",
+    "pmd": "Maven bundled Java defaults plus existing complexity limit",
+    "externalRulesetNeeded": false,
+    "alwaysOn": true,
+    "itSuffixCompatibility": "One path/message-scoped naming compatibility rule",
+    "semanticAndSecurityCertification": false
+  }
+}
