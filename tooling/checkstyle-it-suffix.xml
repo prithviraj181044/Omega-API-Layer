@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+<suppressions>
+  <!-- Required Maven/Omega IT suffix only. Match the specific identifier warning, not the whole file. -->
+  <suppress
+      checks="AbbreviationAsWordInName"
+      files="[/\\]src[/\\]test[/\\]java[/\\].*IT\.java$"
+      message="^Abbreviation in name '([A-Z][a-z0-9]+)+IT' must contain no more than '1' consecutive capital letters\.$"/>
+</suppressions>

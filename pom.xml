@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-parent</artifactId><version>4.1.2</version><relativePath/></parent>
+  <groupId>com.eurobank.omega.api</groupId><artifactId>omega-api-layer</artifactId><version>0.1.0-SNAPSHOT</version><packaging>pom</packaging>
+  <name>Omega API Layer shared foundation</name>
+  <description>Local foundation only. No approved G1, service endpoints or release qualification is implied.</description>
+  <properties>
+    <java.version>25</java.version><maven.compiler.release>25</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <spring-cloud.version>2025.1.4</spring-cloud.version><archunit.version>1.5.1</archunit.version>
+    <jacoco.version>0.8.16</jacoco.version><spotbugs.version>4.10.5.0</spotbugs.version>
+    <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version><maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
+    <test.excludedGroups>container</test.excludedGroups>
+    <checkstyle.runtime.version>14.3.0</checkstyle.runtime.version>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+  <modules>
+    <module>omega-errors-lib</module>
+    <module>api-contract</module>
+    <module>api-policy-core</module>
+    <module>api-platform</module>
+    <module>api-gateway</module>
+    <module>api-onboarding/validation-service</module>
+    <module>api-onboarding/metadata-service</module>
+    <module>event-driven/event-management-service</module>
+    <module>event-driven/sse-delivery-service</module>
+    <module>event-driven/webhook-delivery-service</module>
+  </modules>
+  <dependencyManagement><dependencies><dependency><groupId>gr.eurobank.omega</groupId><artifactId>omega-errors-lib</artifactId><version>${project.version}</version></dependency><dependency><groupId>org.springframework.cloud</groupId><artifactId>spring-cloud-dependencies</artifactId><version>${spring-cloud.version}</version><type>pom</type><scope>import</scope></dependency></dependencies></dependencyManagement>
+  <dependencies>
+    <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-test</artifactId><scope>test</scope></dependency>
+    <dependency><groupId>io.projectreactor</groupId><artifactId>reactor-test</artifactId><scope>test</scope></dependency>
+    <dependency><groupId>com.tngtech.archunit</groupId><artifactId>archunit-junit5</artifactId><version>${archunit.version}</version><scope>test</scope></dependency>
+  </dependencies>
+  <build><plugins>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-enforcer-plugin</artifactId><executions><execution><id>approved-toolchain</id><goals><goal>enforce</goal></goals><configuration><rules>
+      <requireJavaVersion><version>[25,26)</version></requireJavaVersion><requireJavaVendor><includes><include>Eclipse Adoptium</include></includes></requireJavaVendor>
+      <requireMavenVersion><version>[3.9.16,4.0.0)</version></requireMavenVersion>
+      <bannedDependencies><excludes><exclude>javax.*:*</exclude><exclude>*:javax.*</exclude></excludes></bannedDependencies>
+    </rules></configuration></execution></executions></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId><configuration><includes><include>**/*Test.java</include></includes><excludedGroups>${test.excludedGroups}</excludedGroups></configuration></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId><executions><execution><goals><goal>integration-test</goal><goal>verify</goal></goals></execution></executions><configuration><includes><include>**/*IT.java</include></includes><excludedGroups>${test.excludedGroups}</excludedGroups></configuration></plugin>
+    <plugin><groupId>org.jacoco</groupId><artifactId>jacoco-maven-plugin</artifactId><version>${jacoco.version}</version><executions>
+      <execution><id>agent</id><goals><goal>prepare-agent</goal></goals></execution>
+      <execution><id>coverage</id><phase>verify</phase><goals><goal>report</goal><goal>check</goal></goals><configuration><rules>
+        <rule><element>BUNDLE</element><limits><limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>0.80</minimum></limit><limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>0.80</minimum></limit></limits></rule>
+        <rule><element>PACKAGE</element><includes><include>com.eurobank.omega.api.domain*</include></includes><limits><limit><counter>LINE</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit><limit><counter>BRANCH</counter><value>COVEREDRATIO</value><minimum>1.00</minimum></limit></limits></rule>
+      </rules></configuration></execution>
+    </executions></plugin>
+    <plugin><groupId>com.github.spotbugs</groupId><artifactId>spotbugs-maven-plugin</artifactId><version>${spotbugs.version}</version><executions><execution><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
+
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-checkstyle-plugin</artifactId><version>${maven-checkstyle-plugin.version}</version><dependencies><dependency><groupId>com.puppycrawl.tools</groupId><artifactId>checkstyle</artifactId><version>${checkstyle.runtime.version}</version></dependency></dependencies><configuration><configLocation>google_checks.xml</configLocation><suppressionsLocation>${maven.multiModuleProjectDirectory}/tooling/checkstyle-it-suffix.xml</suppressionsLocation><suppressionsFileExpression>org.checkstyle.google.suppressionfilter.config</suppressionsFileExpression><includeTestSourceDirectory>true</includeTestSourceDirectory><consoleOutput>true</consoleOutput><violationSeverity>warning</violationSeverity><failOnViolation>true</failOnViolation></configuration><executions><execution><id>standard-java-style</id><phase>validate</phase><goals><goal>check</goal></goals></execution></executions></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-pmd-plugin</artifactId><version>${maven-pmd-plugin.version}</version><configuration><includeTests>true</includeTests><rulesets><ruleset>${maven.multiModuleProjectDirectory}/tooling/pmd-ruleset.xml</ruleset></rulesets><failOnViolation>true</failOnViolation></configuration><executions><execution><id>standard-java-analysis</id><phase>verify</phase><goals><goal>check</goal></goals></execution></executions></plugin>
+  </plugins></build>
+  <profiles>
+    <profile><id>foundation-smoke</id><!-- Compatibility alias. All normal quality checks remain enabled. --></profile>
+    <profile><id>container-smoke</id><properties><test.excludedGroups/></properties></profile>
+    <profile><id>organisation-quality</id><!-- Compatibility alias; quality checks are always on. --></profile>
+  </profiles>
+</project>
