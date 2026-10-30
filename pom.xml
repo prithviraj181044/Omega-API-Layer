@@ -8,6 +8,7 @@
   <properties>
     <java.version>25</java.version><maven.compiler.release>25</maven.compiler.release><project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring-cloud.version>2025.1.4</spring-cloud.version><archunit.version>1.5.1</archunit.version>
+    <swagger-parser.version>2.1.48</swagger-parser.version>
     <jacoco.version>0.8.16</jacoco.version><spotbugs.version>4.10.5.0</spotbugs.version>
     <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version><maven-pmd-plugin.version>3.28.0</maven-pmd-plugin.version>
     <test.excludedGroups>container</test.excludedGroups>
